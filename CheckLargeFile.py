@@ -1,45 +1,42 @@
 import shutil, os
 
 # Check all folder's subfolder/ files for big files (100mb)
-def checkfolder(fdirect):
+def checkfolder(fdirect, freport):
+   
     for root, subfolders, files in os.walk(fdirect):
+
         if files:
-            for file in files:
-                if os.path.getsize(os.path.join(root, file)) > 100000000:
-                    temp = str(file) + " @ " + str(root)
-                    print(temp)
-        
+             for file in files:
+                currfile = os.path.getsize(os.path.join(root, file))
+                if currfile > 100000000:
+                    freport[0] += currfile
+                    temp = str(file) + " ----------- @ " + str(root) + "------------ " + str(currfile/1000000) +"Mb"
+                    if temp not in freport:
+                        freport.append(temp)
+                        print(temp)
+
         if subfolders:
             for subfolder in subfolders:
-                if os.path.getsize(os.path.join(root, subfolder)) > 100000000:
-                    checkfolder(os.path.join(root, subfolder))
-
-#check sum of files size
-def checktotal(start_path = '.'):
-    total = 0
-    for root, _, files in os.walk(start_path):
-        for f in files:
-            fp = os.path.join(root, f)
-            # skip if it is symbolic link
-            if not os.path.islink(fp):
-                total += os.path.getsize(fp)
-
-    return total
+                checkfolder(os.path.join(root, subfolder), freport)
+            
+        else:
+            pass
+        
+        if not files and  not subfolders:
+            pass
 
 
 if __name__ == '__main__':
     checkdir = str(input("Enter full directory to check for large files:\n"))
 
     if os.path.exists(checkdir) != True:
+        # If given invalid directory / path
         print("Directory does not exist")
         exit()
 
     else:
-        os.chdir(checkdir) # Put location here
-        dirsize =  os.path.getsize(checkdir)
-        if dirsize < 100000000:
-            # Check if whole directory is less than 100mb
-            print("The directory is less than 100MB (%d)" % dirsize)
-            exit()
-        else:
-            checkfolder(checkdir)
+        os.chdir(checkdir) # User input location here
+        report = [0]
+        checkfolder(checkdir, report)
+
+
