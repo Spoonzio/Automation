@@ -1,23 +1,23 @@
 import shutil, os
 
 # Check all folder's subfolder/ files for big files (100mb)
-def checkfolder(fdirect, freport):
+def checkfolder(fdirect, freport, flimit):
    
     for root, subfolders, files in os.walk(fdirect):
 
         if files:
              for file in files:
                 currfile = os.path.getsize(os.path.join(root, file))
-                if currfile > 100000000:
+                if currfile > int(flimit*1000000):
                     freport[0] += currfile
-                    temp = str(file) + " ----------- @ " + str(root) + "------------ " + str(currfile/1000000) +"Mb"
+                    temp = str(file) + " ----------- @ " + str(root) + "------------ " + str(currfile/(1024*1024)) +"Mb"
                     if temp not in freport:
                         freport.append(temp)
                         print(temp)
 
         if subfolders:
             for subfolder in subfolders:
-                checkfolder(os.path.join(root, subfolder), freport)
+                checkfolder(os.path.join(root, subfolder), freport, flimit)
             
         else:
             pass
@@ -35,8 +35,9 @@ if __name__ == '__main__':
         exit()
 
     else:
+        limit = str(input("What is the minimum MB size to look for?(Too low will cause in a large list of result): \n"))
         os.chdir(checkdir) # User input location here
         report = [0]
-        checkfolder(checkdir, report)
+        checkfolder(checkdir, report, limit)
 
 
