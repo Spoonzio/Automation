@@ -4,13 +4,18 @@ import shutil, os
 def checkfolder(fdirect, freport, flimit):
    
     for root, subfolders, files in os.walk(fdirect):
-
         if files:
              for file in files:
                 currfile = os.path.getsize(os.path.join(root, file))
-                if currfile > int(flimit*1000000):
+                if currfile > int(flimit)*(1024*1024):
                     freport[0] += currfile
-                    temp = str(file) + " ----------- @ " + str(root) + "------------ " + str(currfile/(1024*1024)) +"Mb"
+
+                    if currfile > 1073741824:
+                        currfile =str(round(currfile/1073741824 ,2)) + "Gb"
+                    else:
+                        currfile =str(round(currfile/1048576, 2)) + "Mb"
+                        
+                    temp ="# "+ str(file) + " ----------- @ " + str(root) + "------------ " + currfile
                     if temp not in freport:
                         freport.append(temp)
                         print(temp)
