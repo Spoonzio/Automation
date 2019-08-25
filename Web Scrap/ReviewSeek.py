@@ -5,8 +5,6 @@ import random
 from bs4 import BeautifulSoup
 
 # Gather user's search term
-
-
 def collect():
     term = str(input("What gadget review would you like to read?\n"))
     link = "https://www.google.com/search?q=" + \
