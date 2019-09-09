@@ -23,3 +23,12 @@ PDF:
 API:
 -Weather: WeatherBoy.py
     -Acccess OpenWeather API with user provided city name, process JSON and display current weather.
+
+Image:
+-Ascii: AsciiArt.py
+    -Using an image and calculating each pixel's brightness and form an exact image with ASCII characters
+
+-Camera: Camera.py
+    -Load frames from the webcam and display directly in a window
+
+-
